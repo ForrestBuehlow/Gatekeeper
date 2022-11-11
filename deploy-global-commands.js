@@ -11,7 +11,7 @@ const clientId = process.env.GATEKEEPER_BOT_CLIENT_ID;
 const token = process.env.GATEKEEPER_TOKEN;
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+	const command = await import(`./commands/${file}`);
 	commands.push(command.data.toJSON());
 }
 

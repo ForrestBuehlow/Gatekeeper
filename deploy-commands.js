@@ -8,11 +8,11 @@ const commands = [];
 const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 const clientId = process.env.GATEKEEPER_BOT_DEV_CLIENT_ID;
-const guildId = provess.env.GATEKEEPER_BOT_GUILD_ID;
-const token = process.env.GATEKEEPER_DEV_TOKEN;
+const guildId = process.env.GATEKEEPER_BOT_GUILD_ID;
+const token = process.env.GATEKEEPER_BOT_DEV_TOKEN;
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+	const command = await import(`./commands/${file}`);
 	console.log(command)
 	commands.push(command.data.toJSON());
 }
