@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { EmbedBuilder } from 'discord.js';
 import { getRoleIds, getServerPreferences, getUserData, removeRoles, verify } from '../database/wrapper.js';
 
 
@@ -119,7 +120,6 @@ export async function execute(interaction) {
 }
 
 function embedMessage(member, success, options = null) {
-	const { MessageEmbed } = require('discord.js');
 
 	const color = success ? '#1A85FF' : '#D41159';
 	// const title = ('Verification ' + success ? 'Successful  :white_check_mark:' : 'Failed  :no_entry_sign:');
@@ -133,22 +133,22 @@ function embedMessage(member, success, options = null) {
 		`Something wrong with your assigned server nickname and/or role(s)? Contact the server administrator(s) of ${member.guild.name}.` :
 		`Contact the server administrator(s) of ${member.guild.name} if you believe this is an error.`;
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setColor(color)
 		.setTitle(title)
-		.setAuthor(descriptionTitle, descriptionURL)
+		.setAuthor({ name: descriptionTitle, url: descriptionURL })
 		.setDescription(description)
 		.setTimestamp()
-		.setFooter(footer)
+		.setFooter({ text: footer })
 
 	if (success) {
 		if (options['nickname']) {
 			const manageable = options['isManageable'];
 			const nickname = options['nickname'];
 			if (manageable) {
-				embed.addField('Assigned Nickname:', nickname);
+				embed.addFields({ name: 'Assigned Nickname:', value: nickname });
 			} else {
-				embed.addField('Nickname:  :warning:', 'Unable to set nickname: user is not manageable.');
+				embed.addFields({ name: 'Nickname:  :warning:', value: 'Unable to set nickname: user is not manageable.' });
 				embed.setTitle('Verification Issue:  :warning:');
 				embed.setColor('#F0E442');
 			}
@@ -162,7 +162,7 @@ function embedMessage(member, success, options = null) {
 				outputString += `<@&${roleid}> `;
 			}
 			if (outputString.length > 0) {
-				embed.addField('Assigned Role(s):', outputString);
+				embed.addFields({ name: 'Assigned Role(s):', value: outputString });
 			}
 		}
 		if (options['missingPermissions']) {
@@ -175,7 +175,7 @@ function embedMessage(member, success, options = null) {
 			}
 			if (outputString.length > 0) {
 				outputString += '\nUnable to assign the role(s): Bot lacks permissions, or bot is not high enough in the hierarchy list. Please alert your server administrator.'
-				embed.addField('Unable to Assign Role(s):  :warning:', outputString);
+				embed.addFields({ name: 'Unable to Assign Role(s):  :warning:', value: outputString });
 				embed.setTitle('Verification Issue:  :warning:');
 				embed.setColor('#F0E442');
 			}
@@ -189,12 +189,12 @@ function embedMessage(member, success, options = null) {
 				outputString += `${roleid} `;
 			}
 			if (outputString.length > 0) {
-				embed.addField('Missing/Deleted Role(s), removed from database:  :warning:', outputString);
+				embed.addFields({ name: 'Missing/Deleted Role(s), removed from database:  :warning:', value: outputString });
 				embed.setTitle('Verification Issue:  :warning:');
 				embed.setColor('#F0E442');
 			}
 		}
-		embed.addField('\u200b', '\u200b', true);
+		// embed.addFields({ name: '\u200b', '\u200b', value: true });
 	}
 
 	return embed;

@@ -1,7 +1,7 @@
 {
 	"name": "gatekeeper",
 	"type": "module",
-	"version": "1.0.0",
+	"version": "1.14.6",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -11,10 +11,8 @@
 	"author": "Forrest Buehlow",
 	"license": "MPL-2.0",
 	"dependencies": {
-		"@discordjs/builders": "^0.6.0",
-		"@discordjs/rest": "^0.1.0-canary.0",
 		"discord-api-types": "^0.23.1",
-		"discord.js": "^13.11.0",
+		"discord.js": "^14.6.0",
 		"sqlite3": "^5.0.2"
 	}
 }

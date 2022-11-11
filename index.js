@@ -1,9 +1,9 @@
 import { readdirSync } from 'fs';
-import { Client, Collection, Intents } from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
 const token = process.env.GATEKEEPER_BOT_DEV_TOKEN;
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
 const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));

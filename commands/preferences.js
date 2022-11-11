@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from "discord.js";
 import { clearDefaultServerRole, hasPermissions, setDefaultServerRole, setFeedbackPreferences } from "../database/wrapper.js";
 
 export const data = new SlashCommandBuilder()
@@ -11,8 +10,10 @@ export const data = new SlashCommandBuilder()
 		.addStringOption(option => option
 			.setName('option')
 			.setDescription('Set public feedback public or private')
-			.addChoice('Public (observable to other channel members)', 'public')
-			.addChoice('Private (observable only to user)', 'private')
+			.addChoices(
+				{ name: 'Public (observable to other channel members)', value: 'public' },
+				{ name: 'Private (observable only to user)', value: 'private' }
+			)
 			.setRequired(true)))
 	.addSubcommandGroup((group) => group
 		.setName('default_role')
@@ -35,14 +36,7 @@ export async function execute(interaction) {
 	if (interaction.user.id !== interaction.guild.ownerId &&
 		!await hasPermissions(interaction.guild.id, interaction.user.id, Array.from(interaction.member.roles.cache.keys()))) {
 
-		const embed = new MessageEmbed()
-			.setColor('#D41159')
-			.setTitle('Preferences  :no_entry_sign:')
-			.setAuthor(interaction.user.tag, interaction.user.avatarURL())
-			.setDescription('Sorry, you do not have the required permissions to use this command.')
-			.setFooter('Contact your server administrator if you believe this is an error.')
-			.setTimestamp();
-		await interaction.editReply({ embeds: [embed] });
+		await interaction.editReply(`Sorry, you do not have the required permissions to use this command.`);
 
 		return;
 	}

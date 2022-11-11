@@ -8,7 +8,7 @@ https://discord.com/api/oauth2/authorize?client_id=832739923043155969&permission
 
 ## Prerequisites:
 - npm >= 8.19.3
-- node >= 16.15.0
+- node >= 16.9.0
 
 ## Installing the bot:
 ```

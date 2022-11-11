@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from "discord.js";
 import { hasPermissions, getKeys, insertKey, insertName, insertRole } from '../database/wrapper.js';
 
 export const data = new SlashCommandBuilder()
@@ -29,14 +28,7 @@ export async function execute(interaction) {
 	if (interaction.user.id !== interaction.guild.ownerId &&
 		!await hasPermissions(interaction.guild.id, interaction.user.id, Array.from(interaction.member.roles.cache.keys()))) {
 
-		const embed = new MessageEmbed()
-			.setColor('#D41159')
-			.setTitle('Key  :no_entry_sign:')
-			.setAuthor(interaction.user.tag, interaction.user.avatarURL())
-			.setDescription('Sorry, you do not have the required permissions to use this command.')
-			.setFooter('Contact your server administrator if you believe this is an error.')
-			.setTimestamp();
-		await interaction.editReply({ embeds: [embed] });
+		await interaction.editReply(`Sorry, you do not have the required permissions to use this command.`);
 
 		return;
 	}
