@@ -2,22 +2,6 @@
 import sqlite3 from 'sqlite3';
 const path = './database/gatekeeper.sqlite';
 
-export async function hasPermissions(sid, uid, roles) {
-	const userSql = `SELECT discordid FROM PrivilegedUsers WHERE sid = ? AND discordid = ?`;
-	const users = await dbAll(userSql, sqlite3.OPEN_READONLY, [sid, uid]);
-
-	if (users.length > 0) {
-		return true;
-	} else if (roles.length === 0) {
-		return false;
-	}
-
-	const rolesSql = `SELECT rid FROM PrivilegedRoles WHERE sid = ? AND rid IN (${'?,'.repeat(roles.length - 1)}?)`;
-	const privilegedRoles = await dbAll(rolesSql, sqlite3.OPEN_READONLY, [sid].concat(roles));
-
-	return privilegedRoles.length > 0;
-}
-
 export function clearDefaultServerRole(sid) {
 	const sql = `DELETE FROM DefaultServerRoles WHERE sid=?`;
 	const params = [sid];
@@ -129,8 +113,6 @@ export function init() {
 	db.run(`CREATE TABLE IF NOT EXISTS ServerKeyRoles (sid TEXT NOT NULL, key TEXT NOT NULL, rid TEXT NOT NULL, FOREIGN KEY(sid, key) REFERENCES ServerKeys, PRIMARY KEY(sid, key, rid))`);
 	db.run(`CREATE TABLE IF NOT EXISTS VerifiedUsers (sid TEXT NOT NULL, key TEXT NOT NULL, discordid TEXT NOT NULL, FOREIGN KEY(sid, key) REFERENCES ServerKeys, PRIMARY KEY(sid, key, discordid))`);
 	db.run(`CREATE TABLE IF NOT EXISTS DefaultServerRoles (sid TEXT NOT NULL PRIMARY KEY, rid TEXT NOT NULL)`);
-	db.run(`CREATE TABLE IF NOT EXISTS PrivilegedUsers (sid TEXT NOT NULL, discordid TEXT NOT NULL, PRIMARY KEY(sid, discordid))`);
-	db.run(`CREATE TABLE IF NOT EXISTS PrivilegedRoles (sid TEXT NOT NULL, rid TEXT NOT NULL, PRIMARY KEY(sid, rid))`);
 	db.run(`CREATE TABLE IF NOT EXISTS ServerPreferences (sid TEXT NOT NULL PRIMARY KEY, ephemeral INTEGER NOT NULL DEFAULT 1)`);
 	db.close();
 }
