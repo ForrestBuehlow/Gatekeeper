@@ -8,7 +8,7 @@ const commands = [];
 const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 const clientId = process.env.GATEKEEPER_BOT_CLIENT_ID;
-const token = process.env.GATEKEEPER_TOKEN;
+const token = process.env.GATEKEEPER_BOT_TOKEN;
 
 for (const file of commandFiles) {
 	const command = await import(`./commands/${file}`);
