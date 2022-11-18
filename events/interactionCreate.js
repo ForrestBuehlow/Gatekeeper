@@ -9,18 +9,31 @@ export function execute(interaction) {
 
 	console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction`);
 
-	if (!interaction.isCommand())
-		return;
+	if (interaction.isButton()) {
 
-	const command = interaction.client.commands.get(interaction.commandName);
+		const button = interaction.client.buttons.get(interaction.customId);
+		executeInteraction(button, interaction);
+	}
+	else if (interaction.isModalSubmit()) {
+		const modal = interaction.client.modals.get(interaction.customId);
+		executeInteraction(modal, interaction);
+	}
+	else if (interaction.isCommand()) {
 
-	if (!command)
+		const command = interaction.client.commands.get(interaction.commandName);
+		executeInteraction(command, interaction);
+	}
+}
+
+function executeInteraction(interactionType, interaction) {
+	if (!interactionType) {
 		return;
+	}
 
 	try {
-		command.execute(interaction);
+		interactionType.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		interaction.reply({ content: 'There was na error while executing this command!', ephemeral: true });
 	}
 }
