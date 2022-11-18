@@ -1,9 +1,10 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { hasPermissions } from "../database/wrapper.js";
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
 	.setName('manageableroles')
-	.setDescription('Lists the manageable role(s) into assignable and unassignable role(s).');
+	.setDescription('Lists the manageable role(s) into assignable and unassignable role(s).')
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDMPermission(false);
 
 
 export async function execute(interaction) {
