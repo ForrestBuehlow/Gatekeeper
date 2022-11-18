@@ -1,5 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { clearDefaultServerRole, hasPermissions, setDefaultServerRole, setFeedbackPreferences } from "../database/wrapper.js";
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { clearDefaultServerRole, setDefaultServerRole, setFeedbackPreferences } from "../database/wrapper.js";
 
 export const data = new SlashCommandBuilder()
 	.setName('preferences')
@@ -26,20 +26,14 @@ export const data = new SlashCommandBuilder()
 				.setDescription('Use /manageableroles for roles that are assignable')
 				.setRequired(true)))
 		.addSubcommand((subcommand) => subcommand.setName('clear')
-			.setDescription('Clear the default server role')));
+			.setDescription('Clear the default server role'))
+	)
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDMPermission(false);
 
 export async function execute(interaction) {
 
 	await interaction.deferReply({ ephemeral: true });
-
-	// Check 'permissions' for user if the user is not the guild owner
-	if (interaction.user.id !== interaction.guild.ownerId &&
-		!await hasPermissions(interaction.guild.id, interaction.user.id, Array.from(interaction.member.roles.cache.keys()))) {
-
-		await interaction.editReply(`Sorry, you do not have the required permissions to use this command.`);
-
-		return;
-	}
 
 	if (interaction.options.getSubcommand() === 'clear') {
 		console.log('clear initiated');
