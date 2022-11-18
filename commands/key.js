@@ -1,5 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { hasPermissions, getKeys, insertKey, insertName, insertRole } from '../database/wrapper.js';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { getKeys, insertKey, insertName, insertRole } from '../database/wrapper.js';
 
 export const data = new SlashCommandBuilder()
 	.setName('key')
@@ -18,20 +18,15 @@ export const data = new SlashCommandBuilder()
 		.addRoleOption(option => option
 			.setName('role')
 			.setDescription('[optional] assigned role. Leave blank if not different from server default role, see /preferences')
-			.setRequired(false)));
+			.setRequired(false)
+		)
+	)
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDMPermission(false);
 
 export async function execute(interaction) {
 
 	await interaction.deferReply({ ephemeral: true });
-
-	// Check 'permissions' for user if the user is not the guild owner
-	if (interaction.user.id !== interaction.guild.ownerId &&
-		!await hasPermissions(interaction.guild.id, interaction.user.id, Array.from(interaction.member.roles.cache.keys()))) {
-
-		await interaction.editReply(`Sorry, you do not have the required permissions to use this command.`);
-
-		return;
-	}
 
 	if (interaction.options.getSubcommand() === 'add') {
 		console.log('adding new key');
