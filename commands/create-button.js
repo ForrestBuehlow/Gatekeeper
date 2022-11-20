@@ -8,10 +8,17 @@ export const data = new SlashCommandBuilder()
 		.setName('ispublic')
 		.setDescription('Set response to be ephemeral')
 	)
+	.addStringOption(option => option
+		.setName('custommessage')
+		.setDescription('Set a custom message')
+	)
 	.setDMPermission(false);
 
 
 export async function execute(interaction) {
+
+	const message = interaction.options.getString('custommessage') ?? 'Click the button below to begin';
+
 	const row = new ActionRowBuilder()
 	.addComponents(
 		new ButtonBuilder()
@@ -20,5 +27,5 @@ export async function execute(interaction) {
 			.setStyle(ButtonStyle.Primary),
 	);
 
-	await interaction.reply({ content: 'I think you should,', components: [row] });
+	await interaction.reply({ content: message, components: [row] });
 }
