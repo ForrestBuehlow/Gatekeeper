@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, Events, PermissionFlagsBits, EmbedBuilder } from 'discord.js';
 
+const BUTTON_CHARACTER_LIMIT = 80;
 
 export const data = new SlashCommandBuilder()
 	.setName('createbutton')
@@ -12,18 +13,29 @@ export const data = new SlashCommandBuilder()
 		.setName('custommessage')
 		.setDescription('Set a custom message')
 	)
+	.addStringOption(option => option
+		.setName('customlabel')
+		.setDescription('Set a custom button label')
+	)
 	.setDMPermission(false);
 
 
 export async function execute(interaction) {
 
 	const message = interaction.options.getString('custommessage') ?? 'Click the button below to begin';
+	const label = interaction.options.getString('customlabel') ?? 'Verify';
+
+	if (label.length >= BUTTON_CHARACTER_LIMIT) {
+		const error = ':x:  Error: Button length must be <= 80 characters long.'
+		await interaction.reply({ content: error});
+		return;
+	}
 
 	const row = new ActionRowBuilder()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId('verify-button')
-			.setLabel('Verify')
+			.setLabel(label)
 			.setStyle(ButtonStyle.Primary),
 	);
 
