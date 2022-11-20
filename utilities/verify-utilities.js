@@ -2,9 +2,25 @@ import { EmbedBuilder } from 'discord.js';
 import { getRoleIds, getServerPreferences, getUserData, removeRoles, verify } from '../database/wrapper.js';
 
 
-export async function verifyFromInteraction(interaction) {
+export async function verifyFromModal(interaction) {
+
+	const userIdentity = interaction.fields.getTextInputValue('verify-modal-input');
+
+	await verifyFromInteraction(interaction, userIdentity);
+
+}
+
+export async function verifyFromSlashCommand(interaction) {
+
+	const userIdentity = interaction.options.getString('secretkey');
+
+	await verifyFromInteraction(interaction, userIdentity);
 	
-	const secretkeyArgument = interaction.options.getString('secretkey');
+}
+
+async function verifyFromInteraction(interaction, userIdentity) {
+	
+	const secretkeyArgument = userIdentity;
 	const guild = interaction.guild;
 	const serverid = interaction.guild.id;
 	const member = interaction.member;

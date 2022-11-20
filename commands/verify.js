@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { verifyFromInteraction } from '../utilities/verify-utilities.js'
+import { verifyFromSlashCommand } from '../utilities/verify-utilities.js'
 
 export const data = new SlashCommandBuilder()
 	.setName('verify')
@@ -11,6 +11,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
 
-	await verifyFromInteraction(interaction);
+	await verifyFromSlashCommand(interaction);
 
 }
