@@ -14,6 +14,7 @@ export const data = new SlashCommandBuilder()
 		.setName('customlabel')
 		.setDescription('Set a custom button label')
 	)
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 	.setDMPermission(false);
 
 
