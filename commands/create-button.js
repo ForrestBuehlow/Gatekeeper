@@ -6,10 +6,6 @@ const MESSAGE_CHARACTER_LIMIT = 2000;
 export const data = new SlashCommandBuilder()
 	.setName('createbutton')
 	.setDescription('Creates a verification button interaction.')
-	.addBooleanOption(option => option
-		.setName('ispublic')
-		.setDescription('Set response to be ephemeral')
-	)
 	.addStringOption(option => option
 		.setName('custommessage')
 		.setDescription('Set a custom message')
